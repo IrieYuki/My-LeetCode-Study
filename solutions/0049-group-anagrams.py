@@ -3,9 +3,11 @@
 思路（一句话）：anagram 之间只差「字母顺序」，所以把顺序抹掉得到同一个 key，
 再用 dict 把 key 相同的词分到一组。
 
-复杂度：时间 O(n · k log k)（n 个词，每个词排序 k log k）｜空间 O(n · k)
+两种解法均已于 2026-09-21 在 LeetCode AC：
+  解法 1  key = tuple(sorted(s))       时间 O(n · k log k)  ← 排序是主要开销
+  解法 2  key = tuple(26 个字母计数)    时间 O(n · k)        ← 不排序
 
-本题是 2026-09-21 的第一题，AC 版本如下（同时也是「key 设计」这一课的原型）。
+空间同为 O(n · k)：存 n 个词的引用 + 每个不同 key 自身长度 k。
 """
 
 from typing import List
@@ -27,6 +29,26 @@ class Solution:
         return list(d.values())  # 返回 list[list[str]]，不是 dict
 
 
+class Solution2:
+    """解法 2：26 个字母的计数表当 key（不排序，算 key 只要 O(k)）"""
+
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        d = {}
+
+        for s in strs:
+            counts = [0] * 26  # 每个词一张全新的表（必须在循环体内）
+            for ch in s:
+                counts[ord(ch) - ord('a')] += 1  # 'a'→0 … 'z'→25
+            key = tuple(counts)  # 26 个数字，长度固定 → 位置可比
+
+            if key in d:
+                d[key].append(s)
+            else:
+                d[key] = [s]
+
+        return list(d.values())
+
+
 # ---------------------------------------------------------------------------
 # 本题踩过的坑（详见 leetcode-notes/02-数组与哈希表.md）
 #
@@ -35,7 +57,9 @@ class Solution:
 #      if key in seen   -> list 线性查找，实测比 if key in d 慢 121 倍
 #      d 的 keys 本身就是「见过的所有 key」，seen 完全是重复信息
 # 3. 返回值类型要匹配签名：return d 给的是 dict，必须 return list(d.values())
-#
-# 待补：解法 2 —— 用「26 个字母的计数表」当 key，把 O(k log k) 降到 O(k)，
-#       整体时间 O(n·k)。（自行补全后同步到本文件与笔记）
+# 4. 计数表（解法 2）的两处坑：
+#      a) 建在循环外 -> 跨词累加，["eat","tea","ate"] 被拆成 3 组
+#      b) 用 dict 当计数表，tuple(counts) 只会取到【键】、丢掉次数，
+#         key 退化成「字母种类」，["aab","abb"] 会被并成一组
+# 5. 计数表必须【定长 26】+ 位置稳定，不同词的 key 才能逐位比较
 # ---------------------------------------------------------------------------
