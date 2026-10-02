@@ -3,7 +3,7 @@
 思路（一句话）：anagram 之间只差「字母顺序」，所以把顺序抹掉得到同一个 key，
 再用 dict 把 key 相同的词分到一组。
 
-两种解法均已于 2026-09-21 在 LeetCode AC：
+两种解法均已于 2026-09-21/22 在 LeetCode AC：
   解法 1  key = tuple(sorted(s))       时间 O(n · k log k)  ← 排序是主要开销
   解法 2  key = tuple(26 个字母计数)    时间 O(n · k)        ← 不排序
 
