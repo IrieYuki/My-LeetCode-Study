@@ -12,6 +12,8 @@ LeetCode 刷题记录与笔记。用费曼学习法：自己读英文原题 → 
   - `00-复杂度分析.md`：时间复杂度 / 空间复杂度专题
 - `solutions/`：题解代码（一道题一个文件，命名如 `0049-group-anagrams.py`）
 
+配套：Python 标准库速查见 `xx-notes/notes/Python标准库刷题速查笔记.md`（Counter / heapq / bisect / itertools / functools / math）。
+
 ## 使用
 
 建议一道题一个文件，commit 说明写清题号与思路，例如：
